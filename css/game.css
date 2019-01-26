@@ -1,0 +1,210 @@
+
+/**
+ * Game CSS
+ */
+
+html, body, #game {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+}
+
+body.game_on {
+    background-image: url('../assets/images/background.png');
+    background-size: cover;
+    font-family: 'Calibri';
+    font-size: 20px;
+}
+
+header {
+    position: fixed;
+    left: 50%;
+    top: 0px;
+}
+#logo {
+    display: none;
+    position: relative;
+    left: -50%;
+    width: 300px;
+    height: 100px;
+    margin-top: 15px;
+    background-image: url(../assets/images/logoInGame.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#StartScene {
+    display: none;
+    background-color: black;
+}
+#StartScene #main_screen_logo {
+    width: 60%;
+    margin: auto;
+    display: block;
+    margin-top: 5%;
+}
+#StartScene #start_instruction {
+    animation: twinkly 0.5s alternate infinite;
+    margin: 5% 0px;
+    text-align: center;
+    font-size: 100px;
+    font-weight: bold;
+    color: white;
+}
+
+.fullscreen {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.75);
+    z-index: 10;
+}
+
+.fullscreen h1, .fullscreen h2 {
+    width: 100%;
+    margin: auto;
+    color: white;
+    text-align: center;
+}
+.fullscreen h1 {
+    margin-top: 300px;
+}
+
+#LoadingScene {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    z-index: 200;
+}
+
+#loader {
+    width: 300px;
+    height: 300px;
+    transition: transform 2s linear;
+}
+
+#PrepareBattleScene {
+    display: none;
+    background-color: black;
+    z-index: 100;
+}
+
+#PrepareBattleScene h1 {
+    height: 5%;
+    margin: 2% 0px;
+    text-align: center;
+}
+#PrepareBattleScene .game_logo {
+    width: 300px;
+    height: 100px;
+    margin: 2% auto;
+    background-image: url(../assets/images/logoInGame.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#PrepareBattleScene .commands_instructions {
+    width: 80%;
+    height: 20%;
+    margin: auto;
+    background-image: url('../assets/images/commandInstructions.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#PrepareBattleScene .difficulty_mode_container {
+    visibility: hidden;
+    width: 100%;
+    height: 12%;
+    padding-top: 60px;
+    font-size: 25px;
+    color: white;
+}
+
+.difficulty.slick-slide {
+    display: none;
+}
+
+.difficulty.slick-slide:focus {
+    outline: none;
+}
+
+#PrepareBattleScene .slick-current {
+    font-size: 40px;
+}
+
+#PrepareBattleScene .difficulty_mode .difficulty {
+    text-align: center;
+}
+
+#PrepareBattleScene .players_join_container {
+    display: flex;
+    height: 10%;
+    margin-top: 0%;
+}
+
+@keyframes twinkly {
+    0% {opacity: 0.1;}
+    100% {opacity: 1;}
+}
+
+#PrepareBattleScene .player {
+    width: 25%;
+}
+
+#PrepareBattleScene .press_a {
+    width: 100%;
+    height: 100%;
+    color: transparent;
+    background-image: url('../assets/images/pressAButton.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: twinkly 0.5s alternate infinite;
+}
+
+#PrepareBattleScene .player.ready .press_a {
+    background: none;
+    color: white;
+    text-align: center;
+    font-size: 61px;
+    animation: none;
+}
+
+#PrepareBattleScene .start_game_instruction {
+    display: none;
+    margin-top: 40px;
+    color: white;
+    text-align: center;
+    font-size: 61px;
+    animation: twinkly 0.5s alternate infinite;
+}
+
+#PrepareBattleScene .error {
+    display: none;
+    width: 100%;
+    margin: auto;
+    color: white;
+    text-align: center;
+}
+
+#PrepareBattleScene.notSupportedGamePad .notSupportedGamePad {
+    display: block;
+}
+#PrepareBattleScene.missingPadPlayer1 .missingPadPlayer1 {
+    display: block;
+}
+#PrepareBattleScene.missingPadPlayer2 .missingPadPlayer2 {
+    display: block;
+}
+
+#PauseScene {
+    display: none;
+}

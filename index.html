@@ -1,1 +1,104 @@
-<h1>Fulenn Studio - GGJ 2019 - Coming SOON !</h1>
+<!DOCTYPE html>
+<html lang="fr" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>LetalKingFall - GGJ 2019</title>
+        <link rel="stylesheet" href="lib/slick.css" type="text/css" />
+        <link rel="stylesheet" href="css/game.css" type="text/css" />
+    </head>
+    <body class="game_on">
+
+        <!-- Loading Screen -->
+        <div id="LoadingScene" class="fullscreen">
+            <img src="assets/images/loader.gif" alt="Loader" id="loader" />
+        </div>
+
+        <!-- Game Logo -->
+        <header>
+            <div id="logo"></div>
+        </header>
+
+        <!-- Game board -->
+        <div id="game"></div>
+
+        <!-- StartScene -->
+        <div id="StartScene" class="fullscreen">
+
+            <!-- Game Logo -->
+            <img src="assets/images/logoMenu.png" alt="Telepathic Tournament" id="main_screen_logo" />
+
+            <!-- START -->
+            <div id="start_instruction">START</div>
+
+        </div>
+
+        <!-- PrepareBattleScene -->
+        <div id="PrepareBattleScene" class="fullscreen">
+
+            <!-- Game logo -->
+            <h1 class="game_logo"></h1>
+
+            <!-- Errors message -->
+            <h2 class="error notSupportedGamePad">Your browser does not support gamepad which is required to play this game. Sorry !</h2>
+            <h2 class="error missingPadPlayer1">Please, plug-in a first gamepad, then reload the game !</h2>
+            <h2 class="error missingPadPlayer2">Please, plug-in a second gamepad, then reload the game !</h2>
+
+            <!-- Command instructions -->
+            <div class="commands_instructions"></div>
+
+            <!-- Difficulty mode -->
+            <div class="difficulty_mode_container">
+                <div class="difficulty_mode slider center">
+                    <div class="difficulty" difficulty="easy">Easy</div>
+                    <div class="difficulty" difficulty="medium">Medium</div>
+                    <div class="difficulty" difficulty="hard">Hard</div>
+                    <div class="difficulty" difficulty="crazy">Crazy</div>
+                </div>
+            </div>
+
+            <!-- Player Join Container -->
+            <div class="players_join_container">
+                <div class="player player1">
+                    <div class="press_a">Player 1</div>
+                </div>
+                <div class="player player2">
+                    <div class="press_a">Player 2</div>
+                </div>
+                <div class="player player3">
+                    <div class="press_a">Player 3</div>
+                </div>
+                <div class="player player4">
+                    <div class="press_a">Player 4</div>
+                </div>
+            </div>
+
+            <!-- Start Game Insctruction -->
+            <div class="start_game_instruction">Press START to begin Battle !</div>
+
+        </div>
+
+        <!-- PauseScene -->
+        <div id="PauseScene" class="fullscreen">
+            <h1>PAUSE</h1>
+            <h2>Press <i>Start</i> to resume</h2>
+        </div>
+
+        <!-- Library -->
+        <script src="lib/jquery-3.1.1.min.js"></script>
+        <script src="lib/slick.min.js"></script>
+        <script src="lib/phaser.3.15.min.js"></script>
+
+        <!-- Game -->
+        <script src="game/Scenes/LoadingScene.js"></script>
+        <script src="game/Scenes/StartScene.js"></script>
+        <script src="game/Scenes/PauseScene.js"></script>
+        <script src="game/Scenes/PrepareBattleScene.js"></script>
+        <script src="game/Scenes/BattleScene.js"></script>
+        <script src="game/Scenes/FinishedBattleScene.js"></script>
+        <script src="game/GameObjects/Player.js"></script>
+        <script src="game/GameObjects/Shell.js"></script>
+        <script src="game/Utils.js"></script>
+        <script src="game/Game.js"></script>
+
+    </body>
+</html>
