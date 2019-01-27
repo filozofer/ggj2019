@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>LethalKingFall - GGJ 2019</title>
+        <link rel="stylesheet" href="lib/slick.css" type="text/css" />
+        <link rel="stylesheet" href="css/game.css" type="text/css" />
+    </head>
+    <body class="game_on">
+
+        <!-- Loading Screen -->
+        <div id="LoadingScene" class="fullscreen">
+            <img src="assets/images/loader.gif" alt="Loader" id="loader" />
+        </div>
+
+        <!-- Game Logo -->
+        <header>
+            <div id="logo"></div>
+        </header>
+
+        <!-- Game board -->
+        <div id="game"></div>
+
+        <!-- StartScene -->
+        <div id="StartScene" class="fullscreen">
+
+            <!-- Game Logo -->
+            <img class="logo" src="assets/images/StartScene/logo.png" />
+
+            <!-- START -->
+            <img class="press_start" src="assets/images/StartScene/press_start.png" />
+
+        </div>
+
+        <!-- PrepareBattleScene -->
+        <div id="PrepareBattleScene" class="fullscreen">
+
+            <img class="logo" src="assets/images/PrepareBattleScene/logo.png" />
+
+            <div class="players">
+                <div class="player player1" color="blue">
+                    <img class="name" src="assets/images/PrepareBattleScene/J1.png" />
+                    <img class="color" src="assets/images/PrepareBattleScene/player_color_blue.png" />
+                    <img class="press_start" src="assets/images/PrepareBattleScene/player_play_start.png" />
+                    <img class="pad_type" src="assets/images/PrepareBattleScene/player_pad_360.png" />
+                </div>
+                <div class="player player2" color="green">
+                    <img class="name" src="assets/images/PrepareBattleScene/J2.png" />
+                    <img class="color" src="assets/images/PrepareBattleScene/player_color_green.png" />
+                    <img class="press_start" src="assets/images/PrepareBattleScene/player_play_start.png" />
+                    <img class="pad_type" src="assets/images/PrepareBattleScene/player_pad_360.png" />
+                </div>
+                <div class="player player3" color="red">
+                    <img class="name" src="assets/images/PrepareBattleScene/J3.png" />
+                    <img class="color" src="assets/images/PrepareBattleScene/player_color_red.png" />
+                    <img class="press_start" src="assets/images/PrepareBattleScene/player_play_start.png" />
+                    <img class="pad_type" src="assets/images/PrepareBattleScene/player_pad_360.png" />
+                </div>
+                <div class="player player4" color="yellow">
+                    <img class="name" src="assets/images/PrepareBattleScene/J4.png" />
+                    <img class="color" src="assets/images/PrepareBattleScene/player_color_yellow.png" />
+                    <img class="press_start" src="assets/images/PrepareBattleScene/player_play_start.png" />
+                    <img class="pad_type" src="assets/images/PrepareBattleScene/player_pad_360.png" />
+                </div>
+            </div>
+
+            <!-- Start Game Insctruction -->
+            <img class="start_game_instruction" src="assets/images/PrepareBattleScene/game_play_start.png" />
+
+        </div>
+
+        <!-- PauseScene -->
+        <div id="PauseScene" class="fullscreen">
+            <img class="commands" src="assets/images/PauseScene/commands.jpg" />
+        </div>
+
+        <!-- Library -->
+        <script src="lib/jquery-3.1.1.min.js"></script>
+        <script src="lib/slick.min.js"></script>
+        <script src="lib/phaser.3.15.min.js"></script>
+
+        <!-- Game -->
+        <script src="game/Scenes/LoadingScene.js"></script>
+        <script src="game/Scenes/StartScene.js"></script>
+        <script src="game/Scenes/PauseScene.js"></script>
+        <script src="game/Scenes/PrepareBattleScene.js"></script>
+        <script src="game/Scenes/BattleScene.js"></script>
+        <script src="game/Scenes/FinishedBattleScene.js"></script>
+        <script src="game/GameObjects/Player.js"></script>
+        <script src="game/GameObjects/Shell.js"></script>
+        <script src="game/Utils.js"></script>
+        <script src="game/Game.js"></script>
+
+    </body>
+</html>
