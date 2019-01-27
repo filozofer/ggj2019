@@ -35,6 +35,7 @@ class BattleScene extends Phaser.Scene {
                 'smash': { 'volume' : 0.1, 'rate': 1},
             }
         };
+        this.colors = ['blue', 'green', 'red', 'yellow'];
         this.pauseUpdate = false;
         if(this.physics) { this.physics.resume() };
 
@@ -56,11 +57,13 @@ class BattleScene extends Phaser.Scene {
         this.load.image('shell', 'assets/images/BattleScene/bernard_hermite_shell.png');
 
         // Load spritesheets
-        this.load.spritesheet('BHWithShellWalk', 'assets/images/BattleScene/bernard_hermite_shell_walk.png', { frameWidth: 133, frameHeight: 116 });
-        this.load.spritesheet('BHWithoutShellWalk', 'assets/images/BattleScene/bernard_hermite_without_shell_walk.png', { frameWidth: 133, frameHeight: 116 });
-        this.load.spritesheet('BHWithShellDash', 'assets/images/BattleScene/bernard_hermite_shell_dash.png', { frameWidth: 133, frameHeight: 116 });
-        this.load.spritesheet('BHWithoutShellDash', 'assets/images/BattleScene/bernard_hermite_without_shell_dash.png', { frameWidth: 133, frameHeight: 116 });
-        this.load.spritesheet('BHCatch', 'assets/images/BattleScene/bernard_hermite_catch.png', { frameWidth: 133, frameHeight: 116 });
+        for(let k in this.colors) {
+            this.load.spritesheet('BHWithShellWalk_' + this.colors[k], 'assets/images/BattleScene/bernard_hermite_shell_walk_' + this.colors[k] + '.png', { frameWidth: 133, frameHeight: 116 });
+            this.load.spritesheet('BHWithoutShellWalk_' + this.colors[k], 'assets/images/BattleScene/bernard_hermite_without_shell_walk_' + this.colors[k] + '.png', { frameWidth: 133, frameHeight: 116 });
+            this.load.spritesheet('BHWithShellDash_' + this.colors[k], 'assets/images/BattleScene/bernard_hermite_shell_dash_' + this.colors[k] + '.png', { frameWidth: 133, frameHeight: 116 });
+            this.load.spritesheet('BHWithoutShellDash_' + this.colors[k], 'assets/images/BattleScene/bernard_hermite_without_shell_dash_' + this.colors[k] + '.png', { frameWidth: 133, frameHeight: 116 });
+            this.load.spritesheet('BHCatch_' + this.colors[k], 'assets/images/BattleScene/bernard_hermite_catch_' + this.colors[k] + '.png', { frameWidth: 133, frameHeight: 116 });
+        }
 
         // Load Audio
         this.load.audio('background_music', 'assets/sound/background_music.wav');
@@ -77,40 +80,13 @@ class BattleScene extends Phaser.Scene {
      * Build animations for Player
      */
     buildAnimations() {
-
-        this.anims.create({
-            key: 'walkWithShell',
-            frames: this.anims.generateFrameNames('BHWithShellWalk', { start: 0, end: 7 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'walkWithoutShell',
-            frames: this.anims.generateFrameNames('BHWithoutShellWalk', { start: 0, end: 7 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'dashWithShell',
-            frames: this.anims.generateFrameNames('BHWithShellDash', { start: 0, end: 7 }),
-            frameRate: 30
-        });
-
-        this.anims.create({
-            key: 'dashWithoutShell',
-            frames: this.anims.generateFrameNames('BHWithoutShellDash', { start: 0, end: 7 }),
-            frameRate: 30
-        });
-
-        this.anims.create({
-            key: 'catch',
-            frames: this.anims.generateFrameNames('BHCatch', { start: 0, end: 7 }),
-            frameRate: 10
-        });
-
-
+        for(let k in this.colors) {
+            this.anims.create({ key: 'walkWithShell_' + this.colors[k], frames: this.anims.generateFrameNames('BHWithShellWalk_' + this.colors[k], { start: 0, end: 7 }), frameRate: 10, repeat: -1 });
+            this.anims.create({ key: 'walkWithoutShell_' + this.colors[k], frames: this.anims.generateFrameNames('BHWithoutShellWalk_' + this.colors[k], { start: 0, end: 7 }), frameRate: 10, repeat: -1 });
+            this.anims.create({ key: 'dashWithShell_' + this.colors[k], frames: this.anims.generateFrameNames('BHWithShellDash_' + this.colors[k], { start: 0, end: 7 }), frameRate: 30 });
+            this.anims.create({ key: 'dashWithoutShell_' + this.colors[k], frames: this.anims.generateFrameNames('BHWithoutShellDash_' + this.colors[k], { start: 0, end: 7 }), frameRate: 30 });
+            this.anims.create({ key: 'catch_' + this.colors[k], frames: this.anims.generateFrameNames('BHCatch_' + this.colors[k], { start: 0, end: 7 }), frameRate: 10 });
+        }
     }
 
     /**
@@ -145,7 +121,7 @@ class BattleScene extends Phaser.Scene {
         this.playersGroup = this.physics.add.group();
         for(let k in this.players) {
             if(this.players[k] === undefined){ continue };
-            this.players[k] = new Player(this, this.players[k].pad, this.players[k].playerId);
+            this.players[k] = new Player(this, this.players[k].pad, this.players[k].playerId, this.colors[this.players[k].playerId - 1]);
             this.add.existing(this.players[k]);
             this.physics.add.existing(this.players[k]);
             this.players[k].invocate(this, initialPositions[k].x, initialPositions[k].y, initialPositions[k].flipX);
@@ -245,7 +221,7 @@ class BattleScene extends Phaser.Scene {
         if(player.canCatch && !player.haveShell) {
             shell.destroy();
             player.haveShell = true;
-            player.anims.play('catch', true);
+            player.anims.play('catch_' + player.color, true);
             this.sound.add('catch').setVolume(this.config.sounds['catch'].volume).setRate(this.config.sounds['catch'].rate).play();
             return false;
         }

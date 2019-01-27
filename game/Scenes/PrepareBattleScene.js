@@ -47,7 +47,7 @@ class PrepareBattleScene extends Phaser.Scene {
      */
     initGamepads() {
 
-        if(!this.input.gamepad) {
+        if(!this.input || !this.input.gamepad) {
             return;
         }
 

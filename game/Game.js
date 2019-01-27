@@ -95,7 +95,7 @@ var game;
             FinishedBattleScreen
         ]
     });
-    game.scene.start('StartScene');
+    game.scene.start('PrepareBattleScene');
 
 });})(jQuery);
 

@@ -11,7 +11,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
      * @param pad Gamepad linked to player
      * @param playerId Player ID
      */
-    constructor (scene, pad, playerId) {
+    constructor (scene, pad, playerId, color) {
 
         // Call GameObject constructor
         super(scene);
@@ -19,8 +19,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         // Player Pad Input
         this.pad = pad;
 
-        // Set player id
+        // Set player id & color
         this.setPlayerId(playerId);
+        this.color = color;
 
         // Is Player have shell or not ?
         this.haveShell = true;
@@ -51,7 +52,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Set basic configuration
         this.scene = scene;
-        this.setTexture('BHWithShellWalk');
+        this.setTexture('BHWithShellWalk_' + this.color);
         this.flipX = flipX;
         this.displayWidth = 120;
         this.displayHeight = 120;
@@ -75,9 +76,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 if(!this.player.haveShell || (this.rightStick.x === 0 && this.rightStick.y === 0)) {
                     return;
                 }
-
-                // Change texture
-                this.player.setTexture('BHNoShell');
 
                 // Create shell
                 let shell = new Shell(this.scene);
@@ -118,7 +116,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.scene.sound.add('dash').setVolume(this.scene.config.sounds['dash'].volume).setRate(this.scene.config.sounds['dash'].rate).play();
 
                 // Animation
-                this.player.anims.play((this.player.haveShell) ? 'dashWithShell' : 'dashWithoutShell', true);
+                this.player.anims.play((this.player.haveShell) ? 'dashWithShell_' + this.player.color : 'dashWithoutShell_' + this.player.color, true);
 
                 break;
 
@@ -191,10 +189,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
             // Move animation
             if(this.anims.currentAnim === null || !this.haveShell || this.anims.currentAnim.key !== 'catch') {
-                if (move) {
-                    this.anims.play((this.haveShell) ? 'walkWithShell' : 'walkWithoutShell', true);
-                }
-                else {
+                this.anims.play((this.haveShell) ? 'walkWithShell_' + this.color: 'walkWithoutShell_' + this.color, true);
+                if (!move) {
                     this.anims.stop();
                 }
             }
