@@ -2,7 +2,7 @@
 <html lang="fr" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
-        <title>LetalKingFall - GGJ 2019</title>
+        <title>LethalKingFall - GGJ 2019</title>
         <link rel="stylesheet" href="lib/slick.css" type="text/css" />
         <link rel="stylesheet" href="css/game.css" type="text/css" />
     </head>
@@ -25,62 +25,53 @@
         <div id="StartScene" class="fullscreen">
 
             <!-- Game Logo -->
-            <img src="assets/images/logoMenu.png" alt="Telepathic Tournament" id="main_screen_logo" />
+            <img class="logo" src="assets/images/StartScene/logo.png" />
 
             <!-- START -->
-            <div id="start_instruction">START</div>
+            <img class="press_start" src="assets/images/StartScene/press_start.png" />
 
         </div>
 
         <!-- PrepareBattleScene -->
         <div id="PrepareBattleScene" class="fullscreen">
 
-            <!-- Game logo -->
-            <h1 class="game_logo"></h1>
+            <img class="logo" src="assets/images/PrepareBattleScene/logo.png" />
 
-            <!-- Errors message -->
-            <h2 class="error notSupportedGamePad">Your browser does not support gamepad which is required to play this game. Sorry !</h2>
-            <h2 class="error missingPadPlayer1">Please, plug-in a first gamepad, then reload the game !</h2>
-            <h2 class="error missingPadPlayer2">Please, plug-in a second gamepad, then reload the game !</h2>
-
-            <!-- Command instructions -->
-            <div class="commands_instructions"></div>
-
-            <!-- Difficulty mode -->
-            <div class="difficulty_mode_container">
-                <div class="difficulty_mode slider center">
-                    <div class="difficulty" difficulty="easy">Easy</div>
-                    <div class="difficulty" difficulty="medium">Medium</div>
-                    <div class="difficulty" difficulty="hard">Hard</div>
-                    <div class="difficulty" difficulty="crazy">Crazy</div>
+            <div class="players">
+                <div class="player player1" color="blue">
+                    <img class="name" src="assets/images/PrepareBattleScene/J1.png" />
+                    <img class="color" src="assets/images/PrepareBattleScene/player_color_blue.png" />
+                    <img class="press_start" src="assets/images/PrepareBattleScene/player_play_start.png" />
+                    <img class="pad_type" src="assets/images/PrepareBattleScene/player_pad_360.png" />
                 </div>
-            </div>
-
-            <!-- Player Join Container -->
-            <div class="players_join_container">
-                <div class="player player1">
-                    <div class="press_a">Player 1</div>
+                <div class="player player2" color="green">
+                    <img class="name" src="assets/images/PrepareBattleScene/J2.png" />
+                    <img class="color" src="assets/images/PrepareBattleScene/player_color_green.png" />
+                    <img class="press_start" src="assets/images/PrepareBattleScene/player_play_start.png" />
+                    <img class="pad_type" src="assets/images/PrepareBattleScene/player_pad_360.png" />
                 </div>
-                <div class="player player2">
-                    <div class="press_a">Player 2</div>
+                <div class="player player3" color="red">
+                    <img class="name" src="assets/images/PrepareBattleScene/J3.png" />
+                    <img class="color" src="assets/images/PrepareBattleScene/player_color_red.png" />
+                    <img class="press_start" src="assets/images/PrepareBattleScene/player_play_start.png" />
+                    <img class="pad_type" src="assets/images/PrepareBattleScene/player_pad_360.png" />
                 </div>
-                <div class="player player3">
-                    <div class="press_a">Player 3</div>
-                </div>
-                <div class="player player4">
-                    <div class="press_a">Player 4</div>
+                <div class="player player4" color="yellow">
+                    <img class="name" src="assets/images/PrepareBattleScene/J4.png" />
+                    <img class="color" src="assets/images/PrepareBattleScene/player_color_yellow.png" />
+                    <img class="press_start" src="assets/images/PrepareBattleScene/player_play_start.png" />
+                    <img class="pad_type" src="assets/images/PrepareBattleScene/player_pad_360.png" />
                 </div>
             </div>
 
             <!-- Start Game Insctruction -->
-            <div class="start_game_instruction">Press START to begin Battle !</div>
+            <img class="start_game_instruction" src="assets/images/PrepareBattleScene/game_play_start.png" />
 
         </div>
 
         <!-- PauseScene -->
         <div id="PauseScene" class="fullscreen">
-            <h1>PAUSE</h1>
-            <h2>Press <i>Start</i> to resume</h2>
+            <img class="commands" src="assets/images/PauseScene/commands.jpg" />
         </div>
 
         <!-- Library -->

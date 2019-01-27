@@ -6,8 +6,8 @@
 var debug = {
     enable: true,
     contexts: {
-        'gamepad': true,
-        'PrepareBattleScene': true,
+        'gamepad': false,
+        'PrepareBattleScene': false,
         'BattleScene': true
     }
 };
@@ -81,18 +81,21 @@ var game;
             gamepad: true
         },
         physics: {
-            default: 'arcade'
+            default: 'arcade',
+            arcade: {
+                //debug: true
+            }
         },
         scene: [
             LoadingScene,
             PauseScene,
-            StartScreen,
+            StartScene,
             PrepareBattleScene,
             BattleScene,
             FinishedBattleScreen
         ]
     });
-    game.scene.start('PrepareBattleScene');
+    game.scene.start('StartScene');
 
 });})(jQuery);
 

@@ -28,12 +28,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Is Player currently dashing ?
         this.isDashing = false;
-
-        // When player have dash for the last time ?
         this.lastDashTimer = undefined;
+        this.timeBeetweenDash = 1;
 
         // Current speed
-        this.speed = 5;
+        this.initialSpeed = 400;
+        this.speed = this.initialSpeed;
+
+        // Animations flag
+        this.canMoveIntoDirections = { 'left' : true, 'up' : true, 'right' : true, 'down' : true };
+        this.moveInProgress = false;
 
     }
 
@@ -43,17 +47,17 @@ class Player extends Phaser.Physics.Arcade.Sprite {
      * @param x
      * @param y
      */
-    invocate (scene, texture, x, y, flipX){
+    invocate (scene, x, y, flipX){
 
         // Set basic configuration
         this.scene = scene;
-        this.setTexture(texture);
+        this.setTexture('BHWithShellWalk');
         this.flipX = flipX;
         this.displayWidth = 120;
         this.displayHeight = 120;
         this.body.setSize(this.displayWidth, this.displayHeight);
         this.setPosition(x, y);
-        this.setBounce(0.2, 0.2);
+        this.setBounce(2);
         this.setCollideWorldBounds(true);
 
     }
@@ -80,17 +84,65 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.scene.add.existing(shell);
                 this.scene.physics.add.existing(shell);
                 this.scene.shellsGroup.add(shell);
-                shell.invocate(this.player, this.player.x, this.player.y, this.rightStick.x, this.rightStick.y);
+                shell.invocate(this.player, this.player.x, this.player.y);
+                this.scene.physics.moveTo(shell, this.player.x + (this.rightStick.x * 100), this.player.y + (this.rightStick.y * 100), shell.speed);
+
+                // Play sound
+                this.scene.sound.add('shoot').setVolume(this.scene.config.sounds['shoot'].volume).setRate(this.scene.config.sounds['shoot'].rate).play();
 
                 // No shell anymore !
                 this.player.haveShell = false;
                 this.player.justLaunchShell = true;
+                this.scene.time.delayedCall(300, function(player){
+                    player.justLaunchShell = false;
+                }, [this.player]);
+
+                break;
+
+            // Dash !
+            case Phaser.Input.Gamepad.Configs.XBOX_360.LT:
+
+                // Limit dash system
+                if(this.player.lastDashTimer !== undefined && (this.scene.time.now - this.player.lastDashTimer) < this.player.timeBeetweenDash * 1000) {
+                    return;
+                }
+
+                // Dash into direction
+                this.player.body.velocity.x += this.leftStick.x * this.player.speed * 8;
+                this.player.body.velocity.y += this.leftStick.y * this.player.speed * 8;
+                this.player.isDashing = true;
+                this.player.canCatch = true;
+                this.player.lastDashTimer = this.scene.time.now;
+
+                // Play sound
+                this.scene.sound.add('dash').setVolume(this.scene.config.sounds['dash'].volume).setRate(this.scene.config.sounds['dash'].rate).play();
+
+                // Animation
+                this.player.anims.play((this.player.haveShell) ? 'dashWithShell' : 'dashWithoutShell', true);
 
                 break;
 
             // Start the game ! (need at least two players)
             case Phaser.Input.Gamepad.Configs.XBOX_360.START:
-                console.gameLog('Player ' + this.player.playerId + ' ask for PAUSE !');
+                let scene = this.scene;
+                console.gameLog('Player ' + this.player.playerId + ' ask for PAUSE !', 'BattleScene');
+
+                if(!scene.pauseUpdate) {
+                    scene.pauseUpdate = true;
+                    scene.physics.pause();
+                    $('#PauseScene').fadeIn(function () {
+                        $('#PauseScene').css('display', 'flex');
+                        $('#PauseScene').addClass('ready');
+                    });
+                }
+                else  {
+                    $('#PauseScene').fadeOut(1000, function () {
+                        $('#PauseScene').removeClass('ready');
+                        scene.pauseUpdate = false;
+                        scene.physics.resume();
+                    });
+                }
+
                 break;
 
             // Do nothing for other key
@@ -99,39 +151,82 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-
-    /**
-     * Display player on scene creation
-     */
-    create() {
-        // TODO
-    }
-
     /**
      * Player update method (check for Inputs !)
      */
-    update (tokenShellOverlap) {
+    update () {
 
-        // Change the flag when shell get out of player after launching it
-        if(this.justLaunchShellToken != this.scene.tokenShellOverlap) {
-            this.justLaunchShell = false;
-        }
+        // Prevent movement if Player already collide with Arena bounds (WHY I HAVE TO DO THIS FUCKING PHASER !!!)
+        for(var k in this.canMoveIntoDirections) { this.canMoveIntoDirections[k] = true; }
+        this.scene.physics.world.collide(this, this.scene.arenaBounds, function(player, bound){
+            player.canMoveIntoDirections['up'] = (parseInt(player.body.top) > 30);
+            player.canMoveIntoDirections['right'] = (parseInt(player.body.right) < player.scene.sys.canvas.width -30);
+            player.canMoveIntoDirections['down'] = (parseInt(player.body.bottom) < player.scene.sys.canvas.height -30);
+            player.canMoveIntoDirections['left'] = (parseInt(player.body.left) > 30);
+        });
+
 
         // Movement
-        if(this.pad.left || this.pad.leftStick.x < 0) {
-            this.x -= this.speed;
-        }
-        if(this.pad.up || this.pad.leftStick.y < 0) {
-            this.y -= this.speed;
-        }
-        if(this.pad.right || this.pad.leftStick.x > 0) {
-            this.x += this.speed;
-        }
-        if(this.pad.down || this.pad.leftStick.y > 0) {
-            this.y += this.speed;
+        let move = false;
+        this.deccelerate();
+        if(!this.isDashing) {
+            if(this.pad.left || (this.pad.leftStick.x < 0 && Math.abs(this.pad.leftStick.x) > 0.5)) {
+                if(this.canMoveIntoDirections['left']) { this.body.velocity.x -= this.speed; }
+                this.flipX = true;
+                move = true;
+            }
+            if(this.pad.up || (this.pad.leftStick.y < 0 && Math.abs(this.pad.leftStick.y) > 0.5)) {
+                if(this.canMoveIntoDirections['up']) { this.body.velocity.y -= this.speed; }
+                move = true;
+            }
+            if(this.pad.right || (this.pad.leftStick.x > 0 && Math.abs(this.pad.leftStick.x) > 0.5)) {
+                if(this.canMoveIntoDirections['right']) { this.body.velocity.x += this.speed; }
+                this.flipX = false;
+                move = true;
+            }
+            if(this.pad.down || (this.pad.leftStick.y > 0 && Math.abs(this.pad.leftStick.y) > 0.5)) {
+                if(this.canMoveIntoDirections['down']) { this.body.velocity.y += this.speed; }
+                move = true;
+            }
+
+            // Move animation
+            if(this.anims.currentAnim === null || !this.haveShell || this.anims.currentAnim.key !== 'catch') {
+                if (move) {
+                    this.anims.play((this.haveShell) ? 'walkWithShell' : 'walkWithoutShell', true);
+                }
+                else {
+                    this.anims.stop();
+                }
+            }
+
         }
 
-        //
+    }
+
+    /**
+     * Decelerrate the Player
+     */
+    deccelerate() {
+
+        // Deccelerate on x
+        let directionX = (this.body.velocity.x > 0) ? 1 : -1;
+        this.body.velocity.x -= (this.speed * directionX);
+        this.body.velocity.x = (this.body.velocity.x * directionX < 0) ? 0 : this.body.velocity.x;
+
+        // Deccelerate on y
+        let directionY = (this.body.velocity.y > 0) ? 1 : -1;
+        this.body.velocity.y -= (this.speed * directionY);
+        this.body.velocity.y = (this.body.velocity.y * directionY < 0) ? 0 : this.body.velocity.y;
+
+        // End dashing ?
+        if(this.isDashing && this.body.velocity.x === 0 && this.body.velocity.y === 0) {
+            this.scene.time.delayedCall(50, function(player){
+                player.isDashing = false;
+            }, [this]);
+            this.scene.time.delayedCall(1500, function(player){
+                player.canCatch = false;
+            }, [this]);
+        }
 
     }
 

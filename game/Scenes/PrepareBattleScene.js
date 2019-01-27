@@ -13,6 +13,7 @@ class PrepareBattleScene extends Phaser.Scene {
         // Init Scene variables
         this.playersCount = 0;
         this.players = [];
+        this.gamepadInitialized = false;
 
     }
 
@@ -46,9 +47,16 @@ class PrepareBattleScene extends Phaser.Scene {
      */
     initGamepads() {
 
+        if(!this.input.gamepad) {
+            return;
+        }
+
+        // Gamepad are now ready !
+        this.gamepadInitialized = true;
+
         // Init each gamepads
-        for(var k in this.gamepads) {
-            let pad = this.gamepads[k];
+        for(var k in this.input.gamepad.gamepads) {
+            let pad = this.input.gamepad.gamepads[k];
 
             // Only map inputs for X360 Controller
             if(pad.id !== 'Xbox 360 Controller (XInput STANDARD GAMEPAD)') {
@@ -57,8 +65,8 @@ class PrepareBattleScene extends Phaser.Scene {
             console.gameLog('360 Controller connected (index: ' + pad.index + ')', 'gamepad');
 
             // Set mapping for pad
-            pad.scene = this.scene;
-            pad.on('down', this.scene.handlePlayerInputs);
+            pad.scene = this;
+            pad.on('down', this.handlePlayerInputs);
         }
 
     }
@@ -67,6 +75,11 @@ class PrepareBattleScene extends Phaser.Scene {
      * Update PrepareBattleScene
      */
     update () {
+
+        // Verify if gamepad are ready (why I can't do this in create ? >< )
+        if(!this.gamepadInitialized && this.input.gamepad.total > 0) {
+            this.initGamepads();
+        }
 
     }
 
@@ -89,7 +102,7 @@ class PrepareBattleScene extends Phaser.Scene {
         switch (buttonCode) {
 
             // Validate player is ready
-            case Phaser.Input.Gamepad.Configs.XBOX_360.A:
+            case Phaser.Input.Gamepad.Configs.XBOX_360.START:
 
                 // Player join !
                 if(this.playerId === undefined) {
@@ -102,32 +115,24 @@ class PrepareBattleScene extends Phaser.Scene {
                     console.gameLog('Player ' + this.playerId + ' has joined the game ! :)', 'PrepareBattleScene');
 
                 }
-                // Player left !
                 else {
 
-                    // De-assign pad & re assign ids
-                    console.gameLog('Player ' + this.playerId + ' has left the game ! :(', 'PrepareBattleScene');
-                    delete this.scene.players[this.playerId];
-                    this.playerId = undefined;
-                    this.scene.playersCount -= 1;
-
-                    // Re assign ids
-                    let players = [], playerId = 1;
-                    for(let k in this.scene.players) {
-                        this.scene.players[k].setPlayerId(playerId);
-                        this.scene.players[k].pad.playerId = playerId;
-                        players[playerId] = this.scene.players[k];
-                        playerId += 1;
+                    // Start the game ! (need at least two players)
+                    if(this.scene.playersCount >= 2) {
+                        console.gameLog('START GAME !', 'PrepareBattleScene');
+                        this.scene.unload();
+                        let battleScene = this.scene.scene.get('BattleScene');
+                        battleScene.setInitialPlayers(this.scene.players);
+                        this.scene.scene.start('BattleScene');
                     }
-                    this.scene.players = players;
 
                 }
 
                 // Update UI
                 console.gameLog('Current number of players: ' + this.scene.playersCount, 'PrepareBattleScene');
-                $('#PrepareBattleScene .players_join_container .player').removeClass('ready');
+                $('#PrepareBattleScene .players .player').removeClass('ready');
                 for(let k in this.scene.players) {
-                    $('#PrepareBattleScene .players_join_container .player' + this.scene.players[k].playerId).addClass('ready');
+                    $('#PrepareBattleScene .players .player' + this.scene.players[k].playerId).addClass('ready');
                 }
 
                 // Show START battle message or not
@@ -139,17 +144,6 @@ class PrepareBattleScene extends Phaser.Scene {
                     $('#PrepareBattleScene .start_game_instruction').slideUp(0);
                 }
 
-                break;
-
-            // Start the game ! (need at least two players)
-            case Phaser.Input.Gamepad.Configs.XBOX_360.START:
-                if(this.scene.playersCount >= 2) {
-                    console.gameLog('START GAME !', 'PrepareBattleScene');
-                    this.scene.unload();
-                    let battleScene = this.scene.scene.get('BattleScene');
-                    battleScene.setInitialPlayers(this.scene.players);
-                    this.scene.scene.start('BattleScene');
-                }
                 break;
 
             // Do nothing for other key

@@ -27,12 +27,13 @@ class Shell extends Phaser.Physics.Arcade.Sprite {
         this.setTexture('shell');
         this.displayWidth = 100;
         this.displayHeight = 100;
+        this.speed = 1000;
         this.body.setSize(this.displayWidth, this.displayHeight);
         this.setPosition(x, y);
         this.setBounce(1.2);
         this.setCollideWorldBounds(true);
         //this.setAngularAcceleration(20);
-        this.setVelocity(velocityX * 300, velocityY * 300);
+        //this.setVelocity(velocityX * this.speed, velocityY * this.speed);
         this.body.setMaxVelocity(1000, 1000);
         //debugger;
 
