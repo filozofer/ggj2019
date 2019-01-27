@@ -45,7 +45,7 @@ class StartScene extends Phaser.Scene {
 
             // Only map inputs for X360 Controller
             if(pad.id !== 'Xbox 360 Controller (XInput STANDARD GAMEPAD)') {
-                return;
+                continue;
             }
             console.gameLog('360 Controller connected (index: ' + pad.index + ')', 'gamepad');
 

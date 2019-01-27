@@ -25,8 +25,8 @@ class Shell extends Phaser.Physics.Arcade.Sprite {
         // Set basic configuration
         this.player = player;
         this.setTexture('shell');
-        this.displayWidth = 100;
-        this.displayHeight = 100;
+        this.displayWidth = 80;
+        this.displayHeight = 80;
         this.speed = 1000;
         this.body.setSize(this.displayWidth, this.displayHeight);
         this.setPosition(x, y);

@@ -10,6 +10,7 @@ class BattleScene extends Phaser.Scene {
     constructor () {
         super({ 'key' : 'BattleScene'});
         this.init();
+        this.firstGame = true;
     }
 
     /**
@@ -26,7 +27,7 @@ class BattleScene extends Phaser.Scene {
         this.config = {
             'initGameSpeed' : 1,
             'sounds': {
-                'background': { 'volume' : 0.1, 'rate': 0.6},
+                'background': { 'volume' : 0.1, 'rate': 1},
                 'bump': { 'volume' : 0.05, 'rate': 1},
                 'catch': { 'volume' : 0.1, 'rate': 1},
                 'dash': { 'volume' : 0.1, 'rate': 1},
@@ -36,8 +37,9 @@ class BattleScene extends Phaser.Scene {
             }
         };
         this.colors = ['blue', 'green', 'red', 'yellow'];
+        this.gameSpeed = 1;
         this.pauseUpdate = false;
-        if(this.physics) { this.physics.resume() };
+        if(this.physics) { this.physics.resume() }
 
         // Assets
         this.background = undefined;
@@ -80,6 +82,10 @@ class BattleScene extends Phaser.Scene {
      * Build animations for Player
      */
     buildAnimations() {
+        if(!this.firstGame) {
+            return;
+        }
+        this.firstGame = false;
         for(let k in this.colors) {
             this.anims.create({ key: 'walkWithShell_' + this.colors[k], frames: this.anims.generateFrameNames('BHWithShellWalk_' + this.colors[k], { start: 0, end: 7 }), frameRate: 10, repeat: -1 });
             this.anims.create({ key: 'walkWithoutShell_' + this.colors[k], frames: this.anims.generateFrameNames('BHWithoutShellWalk_' + this.colors[k], { start: 0, end: 7 }), frameRate: 10, repeat: -1 });
@@ -137,6 +143,14 @@ class BattleScene extends Phaser.Scene {
         this.backgroundMusic.setRate(this.config.sounds['background'].rate);
         this.backgroundMusic.setLoop(true);
         this.backgroundMusic.play();
+
+        // Speed game loop
+        /*this.speedGameLoop = this.time.addEvent({
+            delay: 500,
+            callback: onEvent,
+            callbackScope: this,
+            loop: true
+        });*/
 
     }
 
@@ -234,6 +248,9 @@ class BattleScene extends Phaser.Scene {
 
         // Game over for this player !
         player.destroy();
+        if(!player.haveShell) {
+            shell.destroy();
+        }
         this.sound.add('smash').setVolume(this.config.sounds['smash'].volume).setRate(this.config.sounds['smash'].rate).play();
 
         // Verify if game is over
@@ -273,6 +290,7 @@ class BattleScene extends Phaser.Scene {
         // Player A kill Player B by dashing on him
         if(playerA.isDashing && playerA.haveShell && !playerB.haveShell) {
             playerB.destroy();
+            playerA.haveShell = false;
             this.sound.add('smash').setVolume(this.config.sounds['smash'].volume).setRate(this.config.sounds['smash'].rate).play();
             this.verifyRoundOver();
         }
@@ -280,6 +298,7 @@ class BattleScene extends Phaser.Scene {
         // Player B kill Player A by dashing on him
         if(playerB.isDashing && playerB.haveShell && !playerA.haveShell) {
             playerA.destroy();
+            playerA.haveShell = false;
             this.sound.add('smash').setVolume(this.config.sounds['smash'].volume).setRate(this.config.sounds['smash'].rate).play();
             this.verifyRoundOver();
         }

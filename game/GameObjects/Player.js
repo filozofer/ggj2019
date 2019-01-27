@@ -10,6 +10,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
      * @param scene Current scene to interact with it
      * @param pad Gamepad linked to player
      * @param playerId Player ID
+     * @param color color of player
      */
     constructor (scene, pad, playerId, color) {
 
@@ -33,7 +34,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.timeBeetweenDash = 1;
 
         // Current speed
-        this.initialSpeed = 400;
+        this.initialSpeed = 350;
         this.speed = this.initialSpeed;
 
         // Animations flag
@@ -54,8 +55,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         this.setTexture('BHWithShellWalk_' + this.color);
         this.flipX = flipX;
-        this.displayWidth = 120;
-        this.displayHeight = 120;
+        this.displayWidth = 100;
+        this.displayHeight = 100;
         this.body.setSize(this.displayWidth, this.displayHeight);
         this.setPosition(x, y);
         this.setBounce(2);
@@ -106,8 +107,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 }
 
                 // Dash into direction
-                this.player.body.velocity.x += this.leftStick.x * this.player.speed * 8;
-                this.player.body.velocity.y += this.leftStick.y * this.player.speed * 8;
+                this.player.body.velocity.x += this.leftStick.x * this.player.speed * 6;
+                this.player.body.velocity.y += this.leftStick.y * this.player.speed * 6;
                 this.player.isDashing = true;
                 this.player.canCatch = true;
                 this.player.lastDashTimer = this.scene.time.now;
