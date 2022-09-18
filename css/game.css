@@ -118,7 +118,20 @@ header {
     justify-content: center;
 }
 
-#PrepareBattleScene .player .name {
+#PrepareBattleScene .player .join_content,
+#PrepareBattleScene .player .inputs_mapping_content,
+#PrepareBattleScene .player .ready_content {
+    display: none;
+}
+
+#PrepareBattleScene .player.join .join_content,
+#PrepareBattleScene .player.inputs_mapping .inputs_mapping_content,
+#PrepareBattleScene .player.ready .ready_content {
+    display: block;
+}
+
+#PrepareBattleScene .player.join .name,
+#PrepareBattleScene .player.ready .name {
     width: 85px;
     height: 85px;
     margin: auto;
@@ -126,7 +139,8 @@ header {
     display: block;
 }
 
-#PrepareBattleScene .player .color {
+#PrepareBattleScene .player.join .color,
+#PrepareBattleScene .player.ready .color {
     height: 80px;
     width: 80px;
     display: block;
@@ -134,7 +148,7 @@ header {
     margin-top: 30%;
 }
 
-#PrepareBattleScene .player .press_start {
+#PrepareBattleScene .player.join .press_start {
     animation: twinkly 0.5s alternate infinite;
     width: 50%;
     height: 40px;
@@ -143,19 +157,54 @@ header {
     display: block;
 }
 
-#PrepareBattleScene .pad_type {
+#PrepareBattleScene .inputs_mapping_content {
+    padding: 45px;
+}
+#PrepareBattleScene .player.inputs_mapping .mapping_header {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-around;
+    padding-top: 15%;
+}
+#PrepareBattleScene .player.inputs_mapping .name {
+    width: 40px;
+    height: 40px;
+    display: block;
+}
+#PrepareBattleScene .player.inputs_mapping .color {
+    height: 35px;
+    width: 35px;
+    display: block;
+}
+#PrepareBattleScene .player.inputs_mapping .mapping_inputs {
+    font-weight: bold;
+    color: white;
+    font-size: 25px;
+    text-align: center;
+    margin: 70px 0;
+}
+#PrepareBattleScene .player.inputs_mapping .input {
+    margin: 10px 0px;
+}
+#PrepareBattleScene .player.inputs_mapping .input.ready {
+    color: forestgreen;
+}
+#PrepareBattleScene .player.inputs_mapping .mapping_not_complete,
+#PrepareBattleScene .player.inputs_mapping .mapping_ready {
+    font-weight: bold;
+    color: white;
+    font-size: 20px;
+}
+#PrepareBattleScene .player.inputs_mapping .mapping_ready {
+    display: none;
+}
+
+#PrepareBattleScene .player.ready .pad_type {
     height: 15%;
     width: 40%;
     margin: auto;
     margin-top: 26%;
-    display: none;
-}
-
-#PrepareBattleScene .player.ready .press_start {
-    display: none;
-}
-#PrepareBattleScene .player.ready .pad_type {
-    display: block;
 }
 
 #PrepareBattleScene .start_game_instruction {

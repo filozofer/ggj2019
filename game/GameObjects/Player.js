@@ -11,14 +11,22 @@ class Player extends Phaser.Physics.Arcade.Sprite {
      * @param pad Gamepad linked to player
      * @param playerId Player ID
      * @param color color of player
+     * @param inputsMapping mapping of the player
      */
-    constructor (scene, pad, playerId, color) {
+    constructor (scene, pad, playerId, color, inputsMapping) {
 
         // Call GameObject constructor
         super(scene);
 
         // Player Pad Input
         this.pad = pad;
+        this.ready = false;
+        this.inputsMapping = inputsMapping ? inputsMapping : {
+            'LAUNCH': null,
+            'DASH': null,
+            'START': null
+        };
+        this.currentInputMappingSelected = 'LAUNCH';
 
         // Set player id & color
         this.setPlayerId(playerId);
@@ -44,12 +52,38 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     /**
+     * Reset input mapping.
+     */
+    resetInputMapping() {
+        this.inputsMapping = {
+            'LAUNCH': null,
+            'DASH': null,
+            'START': null
+        };
+        this.currentInputMappingSelected = 'LAUNCH';
+    }
+
+    /**
+     * Pass to the next input mapping to define.
+     */
+    passToNextInputMapping() {
+        let nextMappingToDefine = {
+            'LAUNCH': 'DASH',
+            'DASH': 'START',
+            'START': null
+        }
+        this.currentInputMappingSelected = nextMappingToDefine[this.currentInputMappingSelected];
+    }
+
+    /**
      * Invocate player into battle !
-     * @param texture
+     *
+     * @param scene
      * @param x
      * @param y
+     * @param flipX
      */
-    invocate (scene, x, y, flipX){
+    invocate (scene, x, y, flipX) {
 
         // Set basic configuration
         this.scene = scene;
@@ -68,10 +102,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
      * Launch the Battle mapping !
      */
     battleMapping (buttonCode, value) {
-        switch (buttonCode) {
+        let actionMapping = this.player.reverseInputsMapping();
+        let action = actionMapping[buttonCode];
+        switch (action) {
 
             // Launch shell
-            case Phaser.Input.Gamepad.Configs.XBOX_360.RT:
+            case 'LAUNCH':
 
                 // Can only launch if user has shell
                 if(!this.player.haveShell || (this.rightStick.x === 0 && this.rightStick.y === 0)) {
@@ -99,7 +135,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
 
             // Dash !
-            case Phaser.Input.Gamepad.Configs.XBOX_360.LT:
+            case 'DASH':
 
                 // Limit dash system
                 if(this.player.lastDashTimer !== undefined && (this.scene.time.now - this.player.lastDashTimer) < this.player.timeBeetweenDash * 1000) {
@@ -122,7 +158,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
 
             // Start the game ! (need at least two players)
-            case Phaser.Input.Gamepad.Configs.XBOX_360.START:
+            case 'START':
                 let scene = this.scene;
                 console.gameLog('Player ' + this.player.playerId + ' ask for PAUSE !', 'BattleScene');
 
@@ -151,6 +187,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     /**
+     * Allow to retrieve mapping between pad-input => ACTION rather than ACTION => pad-input
+     */
+    reverseInputsMapping(){
+        return Object.fromEntries(Object.entries(this.inputsMapping).map(([k, v]) => [v, k]));
+    }
+
+    /**
      * Player update method (check for Inputs !)
      */
     update () {
@@ -163,7 +206,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             player.canMoveIntoDirections['down'] = (parseInt(player.body.bottom) < player.scene.sys.canvas.height -30);
             player.canMoveIntoDirections['left'] = (parseInt(player.body.left) > 30);
         });
-
 
         // Movement
         let move = false;

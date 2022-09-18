@@ -127,7 +127,7 @@ class BattleScene extends Phaser.Scene {
         this.playersGroup = this.physics.add.group();
         for(let k in this.players) {
             if(this.players[k] === undefined){ continue };
-            this.players[k] = new Player(this, this.players[k].pad, this.players[k].playerId, this.colors[this.players[k].playerId - 1]);
+            this.players[k] = new Player(this, this.players[k].pad, this.players[k].playerId, this.colors[this.players[k].playerId - 1], this.players[k].inputsMapping);
             this.add.existing(this.players[k]);
             this.physics.add.existing(this.players[k]);
             this.players[k].invocate(this, initialPositions[k].x, initialPositions[k].y, initialPositions[k].flipX);
@@ -203,12 +203,15 @@ class BattleScene extends Phaser.Scene {
         // Avoid to go out of the arena
         this.physics.world.collide(this.playersGroup, this.playersGroup, this.playersAndPlayersCollide, null, this);
         this.physics.world.collide(this.playersGroup, this.arenaBounds);
-        this.physics.world.collide(this.shellsGroup, this.arenaBounds, function(){
+        this.physics.world.collide(this.shellsGroup, this.arenaBounds, function(shell, arena){
             this.sound.add('bump').setVolume(this.config.sounds['bump'].volume).setRate(this.config.sounds['bump'].rate).play();
+            shell.increaseSpeed();
             return;
         }, null, this);
-        this.physics.world.collide(this.shellsGroup, this.shellsGroup, function(){
+        this.physics.world.collide(this.shellsGroup, this.shellsGroup, function(shellA, shellB){
             this.sound.add('bump').setVolume(this.config.sounds['bump'].volume).setRate(this.config.sounds['bump'].rate).play();
+            shellA.increaseSpeed();
+            shellB.increaseSpeed();
             return;
         }, null, this);
 

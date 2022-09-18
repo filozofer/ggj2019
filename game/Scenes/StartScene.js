@@ -44,10 +44,11 @@ class StartScene extends Phaser.Scene {
             let pad = this.gamepads[k];
 
             // Only map inputs for X360 Controller
-            if(pad.id !== 'Xbox 360 Controller (XInput STANDARD GAMEPAD)') {
+            // Allow any gamepad
+            /*if(pad.id !== 'Xbox 360 Controller (XInput STANDARD GAMEPAD)') {
                 continue;
-            }
-            console.gameLog('360 Controller connected (index: ' + pad.index + ')', 'gamepad');
+            }*/
+            console.gameLog('Pad connected (index: ' + pad.index + ')', 'gamepad');
 
             // Set mapping for pad
             pad.scene = this.scene;
@@ -81,14 +82,11 @@ class StartScene extends Phaser.Scene {
     handlePlayerInputs (buttonCode, value) {
         switch (buttonCode) {
 
-            // Start the game !
+            // Start the game (on any input now and not just X360 Start) !
             case Phaser.Input.Gamepad.Configs.XBOX_360.START:
+            default:
                 this.scene.unload();
                 this.scene.scene.start('PrepareBattleScene');
-                break;
-
-            // Do nothing for other key
-            default:
                 break;
         }
     }

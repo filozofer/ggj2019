@@ -8,19 +8,18 @@ class Shell extends Phaser.Physics.Arcade.Sprite {
      * Shell constructor.
      *
      * @param scene Current scene to interact with it
-     * @param config Array of configuration for player
      */
     constructor (scene) {
         super(scene);
     }
 
     /**
-     * Invocate player into battle !
-     * @param texture
+     * Invocate Shell into battle !
+     * @param player
      * @param x
      * @param y
      */
-    invocate (player, x, y, velocityX, velocityY){
+    invocate (player, x, y){
 
         // Set basic configuration
         this.player = player;
@@ -32,32 +31,16 @@ class Shell extends Phaser.Physics.Arcade.Sprite {
         this.setPosition(x, y);
         this.setBounce(1.2);
         this.setCollideWorldBounds(true);
-        //this.setAngularAcceleration(20);
-        //this.setVelocity(velocityX * this.speed, velocityY * this.speed);
         this.body.setMaxVelocity(1000, 1000);
-        //debugger;
 
     }
 
     /**
-     * Load Shell linked assets
+     * Increase Shell speed.
      */
-    preload() {
-        // TODO
-    }
-
-    /**
-     * Display shell on scene creation ?
-     */
-    create() {
-        // TODO
-    }
-
-    /**
-     * Shell update method rebound ?
-     */
-    update () {
-        // TODO
+    increaseSpeed() {
+        this.speed += 500;
+        // Cannot find how to speed this thing on collision ><
     }
 
 }
